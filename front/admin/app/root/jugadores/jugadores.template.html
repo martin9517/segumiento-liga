@@ -1,0 +1,133 @@
+<section class="content">
+    <div class="row" ng-show="!object">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Jugadores</h3>
+                </div>
+                <div class="box-body">
+
+                    <div class="row">
+                        <div class="col-xs-2">
+                            <button type="button" class="btn btn-block btn-success" ng-click="new()">Nuevo</button>
+                        </div>
+                        <div class="col-xs-4 col-xs-offset-6">
+                            <div class="input-group input-group-sm" style="float: right;">
+                                <input type="text" ng-change="filtering()" ng-model="textFilter" name="table_search"
+                                    class="form-control pull-right" placeholder="Buscar">
+                                <div class="input-group-btn">
+                                    <button type="submit" class="btn btn-default">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive no-padding" style="margin-top: 20px;">
+                        <table class="table table-hover" ng-if="loaded">
+                            <tbody>
+                                <tr>
+                                    <th>Apellido</th>
+                                    <th>Nombre</th>
+                                    <th>N° Carnet</th>
+                                    <th>Club</th>
+                                    <th>Acciones</th>
+                                </tr>
+                                <tr
+                                    ng-repeat="o in objects | filter: textFilter | startFrom: (pagination.page - 1) * pagination.perPage | limitTo: pagination.perPage">                                    
+                                    <td>{{o.apellido}}</td> 
+                                    <td>{{o.nombre}}</td>    
+                                    <td>{{o.numeroCarnet}}</td>
+                                    <td>{{o.club.nombre}}</td>                                
+                                    <td>
+                                        <button type="button" ng-click="edit(o)" class="btn btn-default">
+                                            <i class="fa fa-pencil">
+                                            </i>
+                                        </button>
+                                        <button type="button" ng-click="remove(o)" class="btn btn-danger btn-icons">
+                                            <i class="fa fa-trash">
+                                            </i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="footer" ng-if="pagination.numPages > 1 && loaded" style="text-align:center">
+                            <ul style="text-align:center" uib-pagination total-items="objects.length"
+                                ng-model="pagination.page" max-size="pagination.maxSize" class="pagination-sm"
+                                boundary-link-numbers="true" next-text="Siguiente" previous-text="Anterior">
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="overlay" style="position: relative;height: 50px;" ng-if="!loaded">
+                        <i class="fa fa-refresh fa-spin"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" ng-show="object">
+        <div class="col-xs-12">
+            <div class="box">
+                <form ng-submit="save()">
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label>Apellido</label>
+                                    <input type="text" ng-model="object.apellido" class="form-control"
+                                        placeholder="Apellido" required>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label>Nombre</label>
+                                    <input type="text" ng-model="object.nombre" class="form-control"
+                                        placeholder="Nombre" required>
+                                </div>
+                            </div>                            
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label>Documento</label>
+                                    <input type="text" ng-model="object.documento" class="form-control"
+                                        placeholder="Documento">
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label>N° Carnet</label>
+                                    <input type="text" ng-model="object.numeroCarnet" class="form-control"
+                                        placeholder="N° Carnet" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label>Club</label>
+                                    <select class="form-control" ng-model="object.club" style="width: 100%;"
+                                        tabindex="-1" aria-hidden="true">
+                                        <option value="">Seleccionar un club</option>
+                                        <option ng-repeat="c in clubes" ng-value="c._id"
+                                            ng-selected="c._id == object.club._id">{{c.nombre}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <button type="button" ng-click="back()" class="btn btn-default btn-icons">
+                            <i class="fa fa-arrow-left">
+                            </i>
+                            Volver
+                        </button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,63 @@
+<div class="row" style="margin-top: 3px;">
+    <div class="col-md-6 offset-md-3">
+        <div class="row">
+            <div class="col-md-12" ng-if="loaded">
+                <div ng-repeat="f in fechas" class="table-partidos" ng-show="f.partidos.length > 0">
+                    <div class="title-jornada">
+                        Fecha {{f.numero}}
+                    </div>
+                    <div class="matchs">
+                        <div class="col-md-6 td-match" ng-repeat="p in f.partidos" ng-style="$even && {'border-right':'1px solid #dee2e6'}">
+                            <div class="row" style="margin: 0 !important;">
+                                <div class="col-8" style="padding: 10px">
+                                    <div style="margin-bottom: 5px;" ng-style="p.resultado.local >  p.resultado.visitante && {'font-weight':'600'}">
+                                        <img ng-src="{{p.local.escudo.url}}" style="width:24px;height:24px">
+                                        {{p.local.abreviacion}}
+                                        <span style="float: right;">{{p.resultado.local}}</span>
+                                    </div>
+                                    <div ng-style="p.resultado.visitante >  p.resultado.local && {'font-weight':'600'}">
+                                        <img ng-src="{{p.visitante.escudo.url}}" style="width:24px;height:24px">
+                                        {{p.visitante.abreviacion}}
+                                        <span style="float: right;">{{p.resultado.visitante}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-4" style="border-left: 1px solid #f5f5f5;padding: 10px">
+                                    <div ng-if="p.fechaPartido">
+                                        <div ng-if="p.estado == 1">
+                                            <div style="text-align: center;">
+                                                {{getFecha(p.fechaPartido)}} {{p.fechaPartido | date : 'dd-MM'}}
+                                            </div>
+                                            <div style="text-align: center;">
+                                                {{p.hora ? p.hora : 'Por definirse'}}
+                                            </div>
+                                        </div>
+                                        <div ng-if="p.estado == 2">
+                                            <div style="text-align: center;">
+                                                Fin
+                                            </div>
+                                            <div style="text-align: center;font-weight: 100;">
+                                                {{getFecha(p.fechaPartido)}} {{p.fechaPartido | date : 'dd-MM'}}
+                                            </div>
+                                        </div>
+                                        <div ng-if="p.estado == 3">
+                                            <div style="text-align: center;">
+                                                Suspendido
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div ng-if="!p.fechaPartido" style="padding-top: 15px;">
+                                        Por definirse
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12" style="text-align: center;" ng-if="!loaded">
+                <div class="spinner-border" role="status" ng-style="{'color': $root.liga.colorPrimario}">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </div>

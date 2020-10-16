@@ -1,0 +1,75 @@
+<div class="row" style="margin-top: 3px;">
+    <div class="col-md-6 offset-md-3">
+        <div class="row">
+            <div class="col-12 table-noticias" ng-if="loaded">
+                <div ng-if="!noticia">
+                    <div class="noticia row" ng-repeat="n in noticias" ng-click="openNoticia(n)">
+                        <div class="col-md-9 col-8">
+                            <div class="titulo-noticia">
+                                {{n.titulo}}
+                            </div>
+                            <div class="descripcion-noticia">
+                                {{n.descripcion}}
+                            </div>
+                            <div class="fecha-noticia">
+                                {{n.createdAt | date: 'dd/MM/yy'}}
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-4" style="text-align: right;">
+                            <img class="img-noticia" ng-src="{{n.imagenes[0].url}}" width="100">
+                        </div>
+                    </div>
+                    <div class="row" ng-if="noticias.length == 0">
+                        <div class="col-md-12" style="text-align: center;">
+                            <span>No hay noticias cargadas</span>
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="noticia">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="button" class="btn" ng-click="back()" style="padding-left: 0;">
+                                <div class="back-button">
+                                </div>
+                            </button>
+                        </div>                        
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                                <ol class="carousel-indicators">
+                                    <li data-target="#carouselExampleIndicators" ng-repeat="i in noticia.imagenes" 
+                                        data-slide-to="{{$index}}" ng-class="{active: $index == indiceCarousel}"></li>
+                                </ol>
+                                <div class="carousel-inner">
+                                    <div class="carousel-item" ng-repeat="i in noticia.imagenes" ng-class="{active: $index == indiceCarousel}">
+                                        <img class="d-block w-100" ng-src="{{i.url}}" style="height: 40vh;object-fit: contain;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 20px;">
+                        <div class="col-md-12 col-sm-12">
+                            <div>
+                                <h5 class="titulo-noticia">
+                                    {{noticia.titulo}}
+                                </h5>                                
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12">
+                            <div>
+                                {{noticia.descripcion}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12" style="text-align: center;" ng-if="!loaded">
+                <div class="spinner-border" role="status" ng-style="{'color': $root.liga.colorPrimario}">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

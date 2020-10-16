@@ -1,0 +1,95 @@
+<div class="wrapper">
+    <header class="main-header">
+        <a href="" class="logo">
+        </a>
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top">
+            <!-- Sidebar toggle button-->
+            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                <span class="sr-only">Toggle navigation</span>
+            </a>
+
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <!-- User Account: style can be found in dropdown.less -->
+                    <li class="dropdown user user-menu">
+                        <a href="" class="dropdown-toggle" data-toggle="dropdown">
+                            <img src="dist/img/user-icon.svg" class="user-image" alt="User Image">
+                            <span class="hidden-xs">{{$root.user.nombre}}</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!-- User image -->
+                            <li class="user-header">
+                                <img src="dist/img/user-icon.svg" class="img-circle" alt="User Image">
+
+                                <p>
+                                    {{$root.user.nombre}}
+                                    <small>{{$root.user.email}}</small>
+                                </p>
+                            </li>
+                            <!-- Menu Footer-->
+                            <li class="user-footer">
+                                <div class="pull-right">
+                                    <a href="" ng-click="logout()" class="btn btn-default btn-flat">Cerrar sesión</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+            <ul class="sidebar-menu" data-widget="tree">
+                <li ng-class="{active: $root.location == 'root.ligas'}">
+                    <a href="" ng-click="$root.changeLocation('root.ligas')">
+                        <img src="dist/img/ligas.svg" width="20" height="20" style="filter: invert(1);">
+                        <span>Ligas</span>
+                    </a>
+                </li>
+                <li ng-class="{active: $root.location == 'root.temporadas'}">
+                    <a href="" ng-click="$root.changeLocation('root.temporadas')">
+                        <img src="dist/img/temporadas.svg" width="20" height="20" style="filter: invert(1);">
+                        <span>Temporadas</span>
+                    </a>
+                </li>
+                <li ng-class="{active: $root.location == 'root.clubes'}">
+                    <a href="" ng-click="$root.changeLocation('root.clubes')">
+                        <img src="dist/img/clubes.svg" width="20" height="20" style="filter: invert(1);">
+                        <span>Clubes</span>
+                    </a>
+                </li>
+                <li ng-class="{active: $root.location == 'root.jugadores'}">
+                    <a href="" ng-click="$root.changeLocation('root.jugadores')">
+                        <img src="dist/img/jugadores.svg" width="20" height="20" style="filter: invert(1);">
+                        <span>Jugadores</span>
+                    </a>
+                </li>                
+                <li ng-class="{active: $root.location == 'root.canchas'}">
+                    <a href="" ng-click="$root.changeLocation('root.canchas')">
+                        <img src="dist/img/cancha.svg" width="20" height="20" style="filter: invert(1);">
+                        <span>Canchas</span>
+                    </a>
+                </li>
+                <li ng-class="{active: $root.location == 'root.noticias'}">
+                    <a href="" ng-click="$root.changeLocation('root.noticias')">
+                        <i class="fa fa-newspaper-o"></i>
+                        <span>Noticias</span>
+                    </a>
+                </li>
+                <li ng-class="{active: $root.location == 'root.usuarios'}">
+                    <a href="" ng-click="$root.changeLocation('root.usuarios')">
+                        <i class="fa fa-users"></i>
+                        <span>Usuarios</span>
+                    </a>
+                </li>
+            </ul>
+        </section>
+    </aside>
+
+    <div class="content-wrapper" style="min-height: calc(100vh - 50px) !important;">
+        <ui-view></ui-view>
+    </div>
+</div>

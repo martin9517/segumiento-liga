@@ -1,0 +1,251 @@
+<section class="content">
+    <div class="row" ng-show="!object">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Clubes</h3>
+                </div>
+                <div class="box-body">
+
+                    <div class="row">
+                        <div class="col-xs-2">
+                            <button type="button" class="btn btn-block btn-success" ng-click="new()">Nuevo</button>
+                        </div>
+                        <div class="col-xs-4 col-xs-offset-6">
+                            <div class="input-group input-group-sm" style="float: right;">
+                                <input type="text" ng-change="filtering()" ng-model="textFilter" name="table_search"
+                                    class="form-control pull-right" placeholder="Buscar">
+                                <div class="input-group-btn">
+                                    <button type="submit" class="btn btn-default">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive no-padding" style="margin-top: 20px;">
+                        <table class="table table-hover" ng-if="loaded">
+                            <tbody>
+                                <tr>
+                                    <th>Escudo</th>
+                                    <th>Nombre</th>
+                                    <th>Abreviación</th>
+                                    <th>Dirección</th>
+                                    <th>Localidad</th>
+                                    <th>Liga</th>
+                                    <th>Cancha</th>
+                                    <th>Telefono</th>
+                                    <th>Jugadores</th>
+                                    <th>Acciones</th>
+                                </tr>
+                                <tr
+                                    ng-repeat="o in objects | filter: textFilter | startFrom: (pagination.page - 1) * pagination.perPage | limitTo: pagination.perPage">
+                                    <td>
+                                        <img ng-src="{{o.escudo.url}}" style="width: 50px;height: 50px;">
+                                    </td>
+                                    <td>{{o.nombre}}</td>
+                                    <td>{{o.abreviacion}}</td>
+                                    <td>{{o.direccion}}</td>
+                                    <td>{{o.localidad}}</td>
+                                    <td>{{o.liga.nombre}}</td>
+                                    <td>{{o.cancha.nombre}}</td>
+                                    <td>{{o.telefono}}</td>
+                                    <td>
+                                        <button type="button" ng-click="showJugadores(o)" class="btn btn-default">
+                                            <i class="fa fa-male">
+                                            </i>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button type="button" ng-click="edit(o)" class="btn btn-default">
+                                            <i class="fa fa-pencil">
+                                            </i>
+                                        </button>
+                                        <button type="button" ng-click="remove(o)" class="btn btn-danger btn-icons">
+                                            <i class="fa fa-trash">
+                                            </i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="footer" ng-if="pagination.numPages > 1 && loaded" style="text-align:center">
+                            <ul style="text-align:center" uib-pagination total-items="objects.length"
+                                ng-model="pagination.page" max-size="pagination.maxSize" class="pagination-sm"
+                                boundary-link-numbers="true" next-text="Siguiente" previous-text="Anterior">
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="overlay" style="position: relative;height: 50px;" ng-if="!loaded">
+                        <i class="fa fa-refresh fa-spin"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" ng-show="object">
+        <div class="col-xs-12">
+            <div class="box">
+                <form ng-submit="save()">
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label>Nombre</label>
+                                    <input type="text" ng-model="object.nombre" class="form-control"
+                                        placeholder="Nombre" required>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label>Abreviación</label>
+                                    <input type="text" ng-model="object.abreviacion" class="form-control"
+                                        placeholder="Abreviación">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label>Dirección</label>
+                                    <input type="text" ng-model="object.direccion" class="form-control"
+                                        placeholder="Dirección">
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label>Localidad</label>
+                                    <input type="text" ng-model="object.localidad" class="form-control"
+                                        placeholder="Localidad">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label>Telefono</label>
+                                    <input type="text" ng-model="object.telefono" class="form-control"
+                                        placeholder="Telefono">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label>Liga</label>
+                                    <select class="form-control" ng-model="object.liga" style="width: 100%;"
+                                        tabindex="-1" aria-hidden="true" required>
+                                        <option value="">Seleccionar una liga</option>
+                                        <option ng-repeat="l in ligas" ng-value="l._id"
+                                            ng-selected="l._id == object.liga._id">{{l.nombre}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label>Cancha</label>
+                                    <select class="form-control" ng-model="object.cancha" style="width: 100%;"
+                                        tabindex="-1" aria-hidden="true">
+                                        <option value="">Seleccionar una cancha</option>
+                                        <option ng-repeat="c in canchas" ng-value="c._id"
+                                            ng-selected="c._id == object.cancha._id">{{c.nombre}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" ng-if="!object.escudo">
+                            <div class="col-xs-3">
+                                <div class="btn btn-block btn-success" ngf-select="uploadImagen($files)"
+                                    ngf-pattern="'image/*'" ngf-accept="'image/*'" ngf-multiple="false">Seleccionar
+                                    escudo
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" ng-if="object.escudo" style="margin-top: 10px;">
+                            <div class="col-xs-12">
+                                <img ng-if="object.escudo" ng-src="{{object.escudo.url}}" width="200">
+                                <button type="button" class="btn btn-danger btn-delete-img"
+                                    ng-click="deleteImg()">X</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <button type="button" ng-click="back()" class="btn btn-default btn-icons">
+                            <i class="fa fa-arrow-left">
+                            </i>
+                            Volver
+                        </button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalJugadores" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" style="width: 80%;" role="document">
+            <div class="modal-content" ng-if="!importJugadores">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">
+                        Jugadores de {{club.nombre}}
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <table class="table table-hover">
+                                <tbody>
+                                    <tr>
+                                        <th>Apellido</th>
+                                        <th>Nombre</th>
+                                        <th>N° Carnet</th>
+                                        <th>Fecha Nac.</th>
+                                    </tr>
+                                    <tr ng-repeat="o in club.jugadores">
+                                        <td>{{o.apellido}}</td>
+                                        <td>{{o.nombre}}</td>
+                                        <td>{{o.numeroCarnet}}</td>
+                                        <td>{{o.fechaNacimiento | date: 'dd/MM/yyyy'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" ng-click="openImport()" class="btn btn-success"
+                        style="float: left;">Importar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+            <div class="modal-content" ng-if="importJugadores">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">
+                        Importar jugadores de {{club.nombre}}
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12" style="width: 100%">
+                            <hot-table settings="{stretchH: 'all', rowHeaders: true, contextMenu: true}" row-headers="true" min-spare-rows="1" height="300"
+                                datarows="jugadores">
+                                <hot-column data="apellido" title="'Apellido'"></hot-column>                    
+                                <hot-column data="nombre" title="'Nombre'"></hot-column>
+                                <hot-column data="documento" title="'Documento'"></hot-column>
+                                <hot-column data="numeroCarnet"  title="'N° Carnet'"></hot-column>
+                                </hot-column>
+                            </hot-table>                        
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" ng-click="saveJugadores()" class="btn btn-success"
+                        style="float: left;">Guardar</button>
+                    <button type="button" ng-click="backJugadores()" class="btn btn-default">Volver</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

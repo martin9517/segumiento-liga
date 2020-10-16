@@ -1,0 +1,137 @@
+<section class="content">
+    <div class="row" ng-show="!object">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Noticias</h3>
+                </div>
+                <div class="box-body">
+
+                    <div class="row">
+                        <div class="col-xs-2">
+                            <button type="button" class="btn btn-block btn-success" ng-click="new()">Nuevo</button>
+                        </div>
+                        <div class="col-xs-4 col-xs-offset-6">
+                            <div class="input-group input-group-sm" style="float: right;">
+                                <input type="text" ng-change="filtering()" ng-model="textFilter" name="table_search"
+                                    class="form-control pull-right" placeholder="Buscar">
+                                <div class="input-group-btn">
+                                    <button type="submit" class="btn btn-default">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive no-padding" style="margin-top: 20px;">
+                        <table class="table table-hover" ng-if="loaded">
+                            <tbody>
+                                <tr>
+                                    <th>Liga</th>
+                                    <th>Título</th>
+                                    <th>Descripcion</th>
+                                    <th>Imagenes</th>
+                                    <th>Acciones</th>
+                                </tr>
+                                <tr
+                                    ng-repeat="o in objects | filter: textFilter | startFrom: (pagination.page - 1) * pagination.perPage | limitTo: pagination.perPage">
+                                    <td>{{o.liga.nombre}}</td>
+                                    <td>{{o.titulo}}</td>
+                                    <td>{{o.descripcion}}</td>
+                                    <td>
+                                        <img ng-if="o.imagenes && o.imagenes.length > 0" ng-src="{{o.imagenes[0].url}}" style="object-fit: contain;" height="100">
+                                    </td>
+                                    <td>
+                                        <button type="button" ng-click="edit(o)" class="btn btn-default">
+                                            <i class="fa fa-pencil">
+                                            </i>
+                                        </button>
+                                        <button type="button" ng-click="remove(o)" class="btn btn-danger btn-icons">
+                                            <i class="fa fa-trash">
+                                            </i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="footer" ng-if="pagination.numPages > 1 && loaded" style="text-align:center">
+                            <ul style="text-align:center" uib-pagination total-items="objects.length"
+                                ng-model="pagination.page" max-size="pagination.maxSize" class="pagination-sm"
+                                boundary-link-numbers="true" next-text="Siguiente" previous-text="Anterior">
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="overlay" style="position: relative;height: 50px;" ng-if="!loaded">
+                        <i class="fa fa-refresh fa-spin"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" ng-show="object">
+        <div class="col-xs-12">
+            <div class="box">
+                <form ng-submit="save()">
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label>Liga</label>
+                                    <select class="form-control" ng-model="object.liga" style="width: 100%;"
+                                        tabindex="-1" aria-hidden="true" required>
+                                        <option value="">Seleccionar liga</option>
+                                        <option ng-repeat="l in ligas" ng-value="l._id"
+                                            ng-selected="l._id == object.liga._id">{{l.nombre}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label>Titulo</label>
+                                    <input type="text" ng-model="object.titulo" class="form-control"
+                                        placeholder="Titulo" required>
+                                </div>
+                            </div>                            
+                        </div>   
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label>Descripcion</label>
+                                    <textarea ng-model="object.descripcion" class="form-control" rows="4"
+                                        placeholder="Descripcion">
+                                    </textarea>
+                                </div>
+                            </div>
+                        </div>                    
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <div class="btn btn-block btn-success" ngf-select="uploadImagen($files)"
+                                    ngf-pattern="'image/*'" ngf-accept="'image/*'" ngf-multiple="true">Seleccionar
+                                    imagenes
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" ng-if="object.imagenes" style="margin-top: 10px;">
+                            <div class="col-xs-3" ng-repeat="i in object.imagenes">
+                                <img ng-src="{{i.url}}" width="200">
+                                <button type="button" class="btn btn-danger btn-delete-img"
+                                    ng-click="deleteImg(i,$index)">X</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <button type="button" ng-click="back()" class="btn btn-default btn-icons">
+                            <i class="fa fa-arrow-left">
+                            </i>
+                            Volver
+                        </button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

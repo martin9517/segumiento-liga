@@ -1,0 +1,143 @@
+<section class="content">
+    <div class="row" ng-show="!object">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Ligas</h3>
+                </div>
+                <div class="box-body">
+
+                    <div class="row">
+                        <div class="col-xs-2">
+                            <button type="button" class="btn btn-block btn-success" ng-click="new()">Nuevo</button>
+                        </div>
+                        <div class="col-xs-4 col-xs-offset-6">
+                            <div class="input-group input-group-sm" style="float: right;">
+                                <input type="text" ng-change="filtering()" ng-model="textFilter" name="table_search"
+                                    class="form-control pull-right" placeholder="Buscar">
+                                <div class="input-group-btn">
+                                    <button type="submit" class="btn btn-default">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive no-padding" style="margin-top: 20px;">
+                        <table class="table table-hover" ng-if="loaded">
+                            <tbody>
+                                <tr>
+                                    <th>Icono</th>
+                                    <th>Nombre</th>
+                                    <th>Abreviación</th>
+                                    <th>Acciones</th>
+                                </tr>
+                                <tr
+                                    ng-repeat="o in objects | filter: textFilter | startFrom: (pagination.page - 1) * pagination.perPage | limitTo: pagination.perPage">
+                                    <td>
+                                        <img ng-src="{{o.icono.url}}" style="width: 50px;height: 50px;object-fit: contain;">
+                                    </td>
+                                    <td>{{o.nombre}}</td>
+                                    <td>{{o.abreviacion}}</td>
+                                    <td>
+                                        <button type="button" ng-click="edit(o)" class="btn btn-default">
+                                            <i class="fa fa-pencil">
+                                            </i>
+                                        </button>
+                                        <button type="button" ng-click="remove(o)" class="btn btn-danger btn-icons">
+                                            <i class="fa fa-trash">
+                                            </i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="footer" ng-if="pagination.numPages > 1 && loaded" style="text-align:center">
+                            <ul style="text-align:center" uib-pagination total-items="objects.length"
+                                ng-model="pagination.page" max-size="pagination.maxSize" class="pagination-sm"
+                                boundary-link-numbers="true" next-text="Siguiente" previous-text="Anterior">
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="overlay" style="position: relative;height: 50px;" ng-if="!loaded">
+                        <i class="fa fa-refresh fa-spin"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" ng-show="object">
+        <div class="col-xs-12">
+            <div class="box">
+                <form ng-submit="save()">
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label>Nombre</label>
+                                    <input type="text" ng-model="object.nombre" class="form-control"
+                                        placeholder="Nombre" required>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label>Abreviación</label>
+                                    <input type="text" ng-model="object.abreviacion" class="form-control"
+                                        placeholder="Abreviación">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label>Color principal</label>
+                                    <div class="input-group my-colorpicker1 colorpicker-element">
+                                        <input id="principalColor" type="text" class="form-control">
+                                        <div class="input-group-addon">
+                                            <i></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label>Color secundario</label>
+                                    <div class="input-group my-colorpicker2 colorpicker-element">
+                                        <input id="secundaryColor" type="text" class="form-control">
+                                        <div class="input-group-addon">
+                                            <i></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" ng-if="!object.icono">
+                            <div class="col-xs-3">
+                                <div class="btn btn-block btn-success" ngf-select="uploadImagen($files)"
+                                    ngf-pattern="'image/*'" ngf-accept="'image/*'" ngf-multiple="false">Seleccionar
+                                    icono
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" ng-if="object.icono" style="margin-top: 10px;">
+                            <div class="col-xs-12">
+                                <img ng-if="object.icono" ng-src="{{object.icono.url}}" width="200">
+                                <button type="button" class="btn btn-danger btn-delete-img"
+                                    ng-click="deleteImg()">X</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <button type="button" ng-click="back()" class="btn btn-default btn-icons">
+                            <i class="fa fa-arrow-left">
+                            </i>
+                            Volver
+                        </button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,34 @@
+<div class="head" ng-controller="HeadController" ng-style="{'background-color': $root.liga.colorPrimario}">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="dropdown">
+                <button class="btn btn-drop-down dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-style="{'background-color': $root.liga.colorPrimario}">
+                    <img ng-src="{{$root.liga.icono.url}}" width="40" height="40" style="object-fit: contain;">
+                    {{$root.liga.abreviacion}}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="" ng-repeat="l in ligas" ng-show="l._id != $root.liga._id" ng-click="$root.selectLiga(l)">{{l.nombre}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <ul class="nav">
+                <li class="nav-item item-options col-3" ng-class="{active: $root.location == 'partidos'}">
+                    <a class="nav-link" ng-click="$root.changeLocation('partidos')">PARTIDOS</a>
+                </li>
+                <li class="nav-item item-options col-3" ng-class="{active: $root.location == 'noticias'}">
+                    <a class="nav-link" ng-click="$root.changeLocation('noticias')">NOTICIAS</a>
+                </li>
+                <li class="nav-item item-options col-3" ng-class="{active: $root.location == 'posiciones'}">
+                    <a class="nav-link" ng-click="$root.changeLocation('posiciones')">POSICIONES</a>
+                </li>
+                <li class="nav-item item-options col-3" ng-class="{active: $root.location == 'estadisticas'}">
+                    <a class="nav-link" ng-click="$root.changeLocation('estadisticas')">ESTADÍSTICAS</a>
+                </li>
+            </ul>
+        </div>
+    </div>    
+</div>

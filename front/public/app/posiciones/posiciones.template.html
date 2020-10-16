@@ -1,0 +1,54 @@
+<div class="row" style="margin-top: 3px;">
+    <div class="col-md-6 offset-md-3">
+        <div class="row">
+            <div class="col-12" ng-if="loaded">
+                <div class="title-posiciones">
+                    <div class="col-md-4 col-12">
+                        <select class="form-control my-select">
+                            <option ng-repeat="o in temporadas" ng-selected="$first" ng-value="{{o}}" ng-click="changeTemporada(o)">Temporada {{o.anio}}</option>
+                        </select>
+                    </div>
+                </div>
+                <table class="table table-hover table-posiciones">
+                    <tbody>
+                        <tr style="color: #9b9b9b;border-bottom: 1px solid #e9e9e9;">
+                            <td></td>
+                            <td class="col-3" style="text-align: left;">Equipo</td>
+                            <td class="col-1">PJ</td>
+                            <td class="col-1">G</td>
+                            <td class="col-1">E</td>
+                            <td class="col-1">P</td>
+                            <td class="col-1">GF</td>
+                            <td class="col-1">GC</td>
+                            <td class="col-1">Dif.</td>
+                            <td class="col-1">Pts</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #e9e9e9;cursor:pointer" ng-repeat="o in posiciones">
+                            <td>{{$index + 1}}</td>
+                            <td style="text-align: left;">
+                                <div>
+                                    <img ng-src="{{o.club.escudo.url}}"
+                                        style="width:24px;height:24px">
+                                    {{o.club.nombre}}
+                                </div>
+                            </td>
+                            <td>{{o.partidosJugados}}</td>
+                            <td>{{o.partidosGanados}}</td>
+                            <td>{{o.partidosEmpatados}}</td>
+                            <td>{{o.partidosPerdidos}}</td>
+                            <td>{{o.golesFavor}}</td>
+                            <td>{{o.golesEnContra}}</td>
+                            <td>{{o.golesFavor - o.golesEnContra}}</td>
+                            <td>{{o.puntos}}</td>
+                        </tr>                        
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-12" style="text-align: center;" ng-if="!loaded">
+                <div class="spinner-border" role="status" ng-style="{'color': $root.liga.colorPrimario}">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        </div>        
+    </div>
+</div>

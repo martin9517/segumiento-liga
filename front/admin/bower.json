@@ -1,0 +1,49 @@
+{
+  "name": "SeguimientoLigaAdmin",
+  "authors": [
+    "Martin Acosta <martin9517a@gmail.com>"
+  ],
+  "description": "Panel admin seguimiento de ligas locales",
+  "license": "MIT",
+  "dependencies": {
+    "angular-ui-router": "^1.0.23",
+    "angular-animate": "^1.7.8",
+    "angular-aria": "^1.7.8",
+    "socket.io-client": "^2.3.0",
+    "angular-route": "^1.7.9",
+    "chart.js": "^1.0",
+    "ckeditor": "^4.7",
+    "bootstrap-colorpicker": "^2.5.1",
+    "bootstrap": "^3.4",
+    "jquery": "^3.4.1",
+    "datatables.net": "^1.10.15",
+    "datatables.net-bs": "^2.1.1",
+    "bootstrap-datepicker": "^1.7",
+    "bootstrap-daterangepicker": "^2.1.25",
+    "moment": "^2.18.1",
+    "fastclick": "^1.0.6",
+    "Flot": "flot#^0.8.3",
+    "fullcalendar": "^3.4",
+    "inputmask": "jquery.inputmask#^3.3.7",
+    "ion.rangeSlider": "ionrangeslider#^2.2",
+    "jvectormap": "^1.2.2",
+    "jquery-knob": "^1.2.13",
+    "morris.js": "^0.5.1",
+    "PACE": "pace#^1.0.2",
+    "select2": "^4.0.7",
+    "jquery-slimscroll": "slimscroll#^1.3.8",
+    "jquery-sparkline": "^2.1.3",
+    "font-awesome": "^4.7",
+    "Ionicons": "ionicons#^2.0.1",
+    "jquery-ui": "^1.12.1",
+    "seiyria-bootstrap-slider": "^10.6.2",
+    "angular-bootstrap": "^2.5.0",
+    "ng-simplePagination": "^1.0.3",
+    "ng-file-upload": "^12.2.13",
+    "angular-ui-select": "^0.19.8",
+    "ngHandsontable": "^0.13.0"
+  },
+  "resolutions": {
+    "jquery": "^3.4.1"
+  }
+}

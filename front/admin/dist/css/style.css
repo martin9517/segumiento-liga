@@ -1,0 +1,9 @@
+.btn-delete-img{
+  position: absolute;
+  margin-left: -40px;
+  margin-top: 5px;
+}
+
+.ui-select-choices-group{
+  max-height: 100px;
+}

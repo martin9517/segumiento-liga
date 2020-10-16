@@ -1,0 +1,522 @@
+<section class="content">
+    <div class="row" ng-show="!object">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Temporadas</h3>
+                </div>
+                <div class="box-body">
+
+                    <div class="row">
+                        <div class="col-xs-2">
+                            <button type="button" class="btn btn-block btn-success" ng-click="new()">Nuevo</button>
+                        </div>
+                        <div class="col-xs-4 col-xs-offset-6">
+                            <div class="input-group input-group-sm" style="float: right;">
+                                <input type="text" ng-change="filtering()" ng-model="textFilter" name="table_search"
+                                    class="form-control pull-right" placeholder="Buscar">
+                                <div class="input-group-btn">
+                                    <button type="submit" class="btn btn-default">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive no-padding" style="margin-top: 20px;">
+                        <table class="table table-hover" ng-if="loaded">
+                            <tbody>
+                                <tr>
+                                    <th>Temporada</th>
+                                    <th>Liga</th>
+                                    <th>Fechas</th>
+                                    <th>Acciones</th>
+                                </tr>
+                                <tr
+                                    ng-repeat="o in objects | filter: textFilter | startFrom: (pagination.page - 1) * pagination.perPage | limitTo: pagination.perPage">
+                                    <td>{{o.anio}}</td>
+                                    <td>{{o.liga.nombre}}</td>
+                                    <td>
+                                        <button type="button" ng-click="openFechas(o)" class="btn btn-default">
+                                            <i class="fa fa-calendar">
+                                            </i>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button type="button" ng-click="edit(o)" class="btn btn-default">
+                                            <i class="fa fa-pencil">
+                                            </i>
+                                        </button>
+                                        <button type="button" ng-click="remove(o)" class="btn btn-danger btn-icons">
+                                            <i class="fa fa-trash">
+                                            </i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="footer" ng-if="pagination.numPages > 1 && loaded" style="text-align:center">
+                            <ul style="text-align:center" uib-pagination total-items="objects.length"
+                                ng-model="pagination.page" max-size="pagination.maxSize" class="pagination-sm"
+                                boundary-link-numbers="true" next-text="Siguiente" previous-text="Anterior">
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="overlay" style="position: relative;height: 50px;" ng-if="!loaded">
+                        <i class="fa fa-refresh fa-spin"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" ng-show="object">
+        <div class="col-xs-12">
+            <div class="box">
+                <form ng-submit="save()">
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label>Temporada</label>
+                                    <input type="number" ng-model="object.anio" class="form-control"
+                                        placeholder="Temporada" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label>Liga</label>
+                                    <select class="form-control" ng-model="object.liga" style="width: 100%;"
+                                        tabindex="-1" aria-hidden="true" required>
+                                        <option value="">Seleccionar una liga</option>
+                                        <option ng-repeat="l in ligas" ng-value="l._id"
+                                            ng-selected="l._id == object.liga._id">{{l.nombre}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <button type="button" ng-click="back()" class="btn btn-default btn-icons">
+                            <i class="fa fa-arrow-left">
+                            </i>
+                            Volver
+                        </button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalFechas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" style="width: 80%;" role="document">
+            <div class="modal-content" ng-show="!fecha">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">
+                        Fechas temporada {{temporada.anio}} - {{temporada.liga.nombre}}
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12" ng-if="temporada.fechas.length > 0">
+                            <table class="table table-hover">
+                                <tbody>
+                                    <tr>
+                                        <th>Tipo</th>
+                                        <th>Número</th>
+                                        <th>Fase</th>
+                                        <th>Partidos</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                    <tr ng-repeat="o in temporada.fechas">
+                                        <td>{{o.tipo  == 1 ? 'Liga' : 'Eliminatoria/Petit' }}</td>
+                                        <td>{{o.numero}}</td>
+                                        <td>{{o.fase}}</td>
+                                        <td>
+                                            <button type="button" ng-click="showPartidos(o)" class="btn btn-default">
+                                                <i class="fa fa-soccer-ball-o">
+                                                </i>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button type="button" ng-click="editFecha(o)" class="btn btn-default">
+                                                <i class="fa fa-pencil">
+                                                </i>
+                                            </button>
+                                            <button type="button" ng-click="removeFecha(o,$index)"
+                                                class="btn btn-danger btn-icons">
+                                                <i class="fa fa-trash">
+                                                </i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-xs-12" ng-if="!temporada.fechas.length" style="text-align: center;">
+                            <span>No hay fechas cargadas</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" ng-click="addFecha()" class="btn btn-success" style="float: left;">Agregar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>                    
+                </div>
+            </div>
+            <div class="modal-content" ng-show="fecha">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">
+                        Fechas temporada {{temporada.anio}} - {{temporada.liga.nombre}}
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label>Tipo de fecha</label>
+                                <select class="form-control" ng-model="fecha.tipo" style="width: 100%;" tabindex="-1" aria-hidden="true" required>
+                                    <option value="">Seleccionar tipo</option>
+                                    <option value="1">Liga</option>
+                                    <option value="2">Eliminatoria/Petit</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" ng-if="fecha.tipo == 1">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label>Número</label>
+                                <input type="number" ng-model="fecha.numero" class="form-control" min="1"
+                                    placeholder="Número" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" ng-if="fecha.tipo == 2">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label>Fase</label>
+                                <input type="text" ng-model="fecha.fase" class="form-control"
+                                    placeholder="Fase" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" ng-click="saveFecha()" class="btn btn-success" style="float: left;">Guardar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalPartidos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" style="width: 80%;" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">
+                        Partidos - {{fechaSelected.tipo == 1 ? 'fecha ' +  fechaSelected.numero : fechaSelected.fase}}
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <!-- Lista partidos -->
+                        <div ng-if="fechaSelected.partidos.length > 0">
+                            <div class="col-xs-12">
+                                <table class="table table-hover">
+                                    <tbody>
+                                        <tr>
+                                            <th class="col-xs-3 text-center">Local</th>
+                                            <th class="col-xs-1 text-center">Resultado</th>
+                                            <th class="col-xs-3 text-center">Visitante</th>
+                                            <th class="col-xs-3 text-center">Fecha - hora</th>
+                                            <th class="col-xs-2 text-center">Acciones</th>
+                                        </tr>
+                                        <tr ng-repeat="p in fechaSelected.partidos" ng-style="p.estado == 2 && {'background-color':'#00ff662e'}">
+                                            <td class="text-center">{{p.local.nombre}}</td>
+                                            <td class="text-center">{{p.resultado.local}} - {{p.resultado.visitante}}</td>
+                                            <td class="text-center">{{p.visitante.nombre}}</td>
+                                            <td class="text-center">
+                                                <span>{{p.fechaPartido ? (p.fechaPartido | date: 'dd/MM/yyyy') : 'Por definirse' }} - {{p.hora ? p.hora : 'Por definirse'}}</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <button type="button" ng-click="openDetalle(p)" class="btn btn-success">
+                                                    <i class="fa fa-edit">
+                                                    </i>
+                                                </button>
+                                                <button type="button" ng-click="deletePartido(p,$index)" class="btn btn-danger">
+                                                    <i class="fa fa-trash">
+                                                    </i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <hr style="border-top: 1px solid #eee !important;">
+                            </div>
+                        </div>
+                        <div class="col-xs-12" ng-if="!fechaSelected.partidos.length && partidos.length == 0" style="text-align: center;">
+                            <span>No hay partidos cargados</span>
+                        </div>
+                        <!-- Form partidos -->
+                        <div ng-if="partidos && partidos.length > 0">
+                            <div ng-repeat="p in partidos" style="float: left;width: 100%;">
+                                <div class="col-xs-3">
+                                    <div class="form-group">
+                                        <select class="form-control" ng-model="p.local" style="width: 100%;"
+                                            tabindex="-1" aria-hidden="true" required>
+                                            <option value="">Seleccionar equipo local</option>
+                                            <option ng-repeat="c in clubes" ng-value="c._id">{{c.nombre}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-xs-1" style="text-align: center;">
+                                    <span style="line-height: 2.5;">-</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <div class="form-group">
+                                        <select class="form-control" ng-model="p.visitante" style="width: 100%;"
+                                            tabindex="-1" aria-hidden="true" required>
+                                            <option value="">Seleccionar equipo visitante</option>
+                                            <option ng-repeat="c in clubes" ng-value="c._id">{{c.nombre}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-xs-3">
+                                    <input type="date" class="form-control" ng-model="p.fechaPartido" style="width: 60%;float: left;">
+                                    <input type="text" class="form-control" ng-model="p.hora" style="width: 40%;" placeholder="Hora">
+                                </div>
+                                <div class="col-xs-2" style="text-align: center;">
+                                    <button type="button" ng-click="savePartido(p,$index)" class="btn btn-success">
+                                        <i class="fa fa-check">
+                                        </i>
+                                    </button>
+                                    <button type="button" ng-click="removePartido($index)" class="btn btn-danger">
+                                        <i class="fa fa-close">
+                                        </i>
+                                    </button>
+                                </div>
+                            </div>                            
+                        </div>
+                        <div class="col-xs-12">
+                            <button type="button" ng-click="addPartido()" class="btn btn-success">
+                                <i class="fa fa-plus">
+                                </i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalPartidoDetalle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" style="width: 80%;" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">
+                        <span style="color: rgb(47, 160, 204);">{{partido.local.nombre}}</span> vs <span style="color: rgb(47, 160, 204);">{{partido.visitante.nombre}}</span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row" style="margin-bottom: 20px;">
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label>Fecha</label>
+                                <input type="date" class="form-control" ng-model="partido.fechaPartido">
+                            </div>                                                        
+                        </div>
+                        <div class="col-xs-2">
+                            <div class="form-group">
+                                <label>Hora</label>
+                                <input type="text" class="form-control" ng-model="partido.hora" placeholder="Hora">
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label>Estado</label>
+                                <select class="form-control" ng-model="partido.estado" style="width: 100%;">
+                                    <option ng-value="1" ng-selected="partido.estado == 1">Por jugar</option>
+                                    <option ng-value="2" ng-selected="partido.estado == 2">Finalizado</option>
+                                    <option ng-value="3" ng-selected="partido.estado == 3">Suspendido</option>
+                                    <option ng-value="4" ng-selected="partido.estado == 4">Postergado</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6" style="border-right: 1px solid rgb(222, 226, 230);min-height: 250px;">
+                            <h4 style="text-align:center">Local</h4>
+                            <div class="row">
+                                <div>
+                                    <table class="table table-hover">
+                                        <tbody>
+                                            <tr>
+                                                <th class="col-xs-4" style="padding-left: 15px;padding-right: 15px;">Jugador</th>
+                                                <th class="col-xs-3" style="padding-left: 15px;padding-right: 15px;">Acción</th>
+                                                <th class="col-xs-3" style="padding-left: 15px;padding-right: 15px;">Min.</th>
+                                                <th class="col-xs-2" style="padding-left: 15px;padding-right: 15px;"></th>
+                                            </tr>
+                                            <tr  ng-repeat="o in partido.detalles | orderBy: 'minuto'" ng-if="o.tipo == 1">
+                                                <td style="padding-left: 15px;padding-right: 15px;">
+                                                    {{o.jugador.apellido + ' ' + o.jugador.nombre}}
+                                                </td>
+                                                <td style="padding-left: 15px;padding-right: 15px;">
+                                                    <img src="dist/img/pelota.png" width="26" height="26" ng-if="o.accion == 1">
+                                                    <img src="dist/img/amarilla.png" width="26" height="26" ng-if="o.accion == 2">
+                                                    <img src="dist/img/roja.png" width="26" height="26" ng-if="o.accion == 3">
+                                                </td>
+                                                <td style="padding-left: 15px;padding-right: 15px;">
+                                                    {{o.minuto}}
+                                                </td>
+                                                <td style="padding-left: 15px;padding-right: 15px;">
+                                                    <button type="button" ng-click="removeDetalle(o)" class="btn btn-danger">
+                                                        <i class="fa fa-remove">
+                                                        </i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>       
+                                </div>                                                        
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    <div class="form-group" style="text-align: left;">
+                                        <label>Jugador</label>
+                                        <ui-select ng-model="detalleLocal.jugador" style="width: 100%;"
+                                            title="Seleccionar un jugador">
+                                            <ui-select-match
+                                                placeholder="Nombre del jugador">
+                                                {{$select.selected.apellido}} {{$select.selected.nombre}}
+                                            </ui-select-match>
+                                            <ui-select-choices
+                                                repeat="j in partido.local.jugadores | orderBy: 'apellido' | propsFilter: {nombre: $select.search, apellido: $select.search}">
+                                                <small>
+                                                    {{j.apellido}} {{j.nombre}}
+                                                </small>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                                <div class="col-xs-3">
+                                    <div class="form-group">
+                                        <label>Acción</label>
+                                        <select class="form-control" ng-model="detalleLocal.accion" style="width: 100%;"
+                                            tabindex="-1" aria-hidden="true" required>
+                                            <option value="">Seleccionar una acción</option>
+                                            <option value="1">Gol</option>
+                                            <option value="2">Amonestación</option>
+                                            <option value="3">Expulsión</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-xs-3">
+                                    <div class="form-group">
+                                        <label>Minuto</label>
+                                        <input type="number" ng-model="detalleLocal.minuto" class="form-control" min="1"
+                                            placeholder="Min." required>
+                                    </div>                                    
+                                </div>
+                                <div class="col-xs-2">
+                                    <button type="button" ng-click="addDetalle(detalleLocal,1)" class="btn btn-success" style="margin-top: 25px;">
+                                        <i class="fa fa-check">
+                                        </i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6" style="min-height: 250px;">
+                            <h4 style="text-align:center">Visitante</h4>
+                            <div class="row">
+                                <div>
+                                    <table class="table table-hover">
+                                        <tbody>
+                                            <tr>
+                                                <th class="col-xs-4" style="padding-left: 15px;padding-right: 15px;">Jugador</th>
+                                                <th class="col-xs-3" style="padding-left: 15px;padding-right: 15px;">Acción</th>
+                                                <th class="col-xs-3" style="padding-left: 15px;padding-right: 15px;">Min.</th>
+                                                <th class="col-xs-2" style="padding-left: 15px;padding-right: 15px;"></th>
+                                            </tr>
+                                            <tr  ng-repeat="o in partido.detalles | orderBy: 'minuto'" ng-if="o.tipo == 2">
+                                                <td style="padding-left: 15px;padding-right: 15px;">
+                                                    {{o.jugador.apellido + ' ' + o.jugador.nombre}}
+                                                </td>
+                                                <td style="padding-left: 15px;padding-right: 15px;">
+                                                    {{o.accion == 1 ? 'Gol' :  o.accion == 2 ? 'Amonestación':  o.accion == 3 ? 'Expulsión': ''}}
+                                                </td>
+                                                <td style="padding-left: 15px;padding-right: 15px;">
+                                                    {{o.minuto}}
+                                                </td>
+                                                <td style="padding-left: 15px;padding-right: 15px;">
+                                                    <button type="button" ng-click="removeDetalle(o)" class="btn btn-danger">
+                                                        <i class="fa fa-remove">
+                                                        </i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>       
+                                </div>                                                        
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    <div class="form-group" style="text-align: left;">
+                                        <label>Jugador</label>
+                                        <ui-select ng-model="detalleVisitante.jugador"
+                                            ng-disabled="ctrl.disabled" style="width: 100%;"
+                                            title="Seleccionar un jugador">
+                                            <ui-select-match
+                                                placeholder="Nombre del jugador">
+                                                {{$select.selected.apellido}} {{$select.selected.nombre}}
+                                            </ui-select-match>
+                                            <ui-select-choices
+                                                repeat="j in partido.visitante.jugadores | orderBy: 'apellido' | propsFilter: {nombre: $select.search, apellido: $select.search}">
+                                                <small>
+                                                    {{j.apellido}} {{j.nombre}}
+                                                </small>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                                <div class="col-xs-3">
+                                    <div class="form-group">
+                                        <label>Acción</label>
+                                        <select class="form-control" ng-model="detalleVisitante.accion" style="width: 100%;"
+                                            tabindex="-1" aria-hidden="true" required>
+                                            <option value="">Seleccionar una acción</option>
+                                            <option value="1">Gol</option>
+                                            <option value="2">Amonestación</option>
+                                            <option value="3">Expulsión</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-xs-3">
+                                    <div class="form-group">
+                                        <label>Minuto</label>
+                                        <input type="number" ng-model="detalleVisitante.minuto" class="form-control" min="1"
+                                            placeholder="Min." required>
+                                    </div>                                    
+                                </div>
+                                <div class="col-xs-2">
+                                    <button type="button" ng-click="addDetalle(detalleVisitante,2)" class="btn btn-success" style="margin-top: 25px;">
+                                        <i class="fa fa-check">
+                                        </i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" ng-click="updatePartido()" class="btn btn-success" style="float: left;">Guardar</button>
+                    <button type="button" class="btn btn-default" ng-click="closeDetalle()">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
